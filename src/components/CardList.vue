@@ -29,8 +29,9 @@ export default {
         return store.getters.topCountriesPoblation
       })
 
-      onMounted(() => {
-        store.dispatch('getCountries')
+      onMounted( async() => {
+        await store.dispatch('getCountries')
+        await store.dispatch('filterRegion', 'Americas')
       })
 
       return { countries }

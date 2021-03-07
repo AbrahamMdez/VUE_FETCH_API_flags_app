@@ -16,19 +16,38 @@ export default createStore({
   actions: {
     async getCountries({ commit }) {
       try {
-        const res = await fetch('https://restcountries.eu/rest/v2/all')
+        const res = await fetch('api.json')
         const data = await res.json();
         /* console.log(data) */
         commit('setCountries', data)
       } catch (error) {
         console.log(error)
       }
+    },
+    filterRegion({ commit, state }, region ) {
+      const filter = state.countries.filter(countrie => {
+        return countrie.region.includes(region)
+      })
+      commit('setFilterCountries', filter)
+    },
+
+    filterName({ commit, state }, text) {
+      const textClient = text.toLowerCase()
+      const filter = state.countries.filter(countrie => {
+        const textApi = countrie.name.toLowerCase()
+        
+        if(textApi.includes(textClient)) {
+          return countrie
+        }
+      })
+
+      commit('setFilterCountries', filter)
     }
   },
 
   getters: {
     topCountriesPoblation(state) {
-      return state.countries.sort((a ,b) => {
+      return state.filterCountries.sort((a ,b) => {
         return a.population < b.population ? 1 : -1
       })
     }
